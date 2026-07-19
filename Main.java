@@ -15,7 +15,6 @@ class Main {
         }
     }
 
-
     public int menu() {
         int choice;
 
@@ -38,7 +37,6 @@ class Main {
         return (choice < 6 && choice >= 0);
     }
 
-
     public void displaySeats() {
 
         System.out.println("Current Seats: ");
@@ -54,17 +52,16 @@ class Main {
 
     }
 
-
     public void bookSeat() {
 
 
-        System.out.println("Enter the number of seat: ");
+        System.out.print("Enter the number of seat: ");
         int desireSeat = sc.nextInt();
 
         int row = desireSeat / 10;
         int col = desireSeat % 10;
 
-        editSeats(row, col);
+        editSeats(row-1, col-1);
 
     }
 
@@ -78,44 +75,40 @@ class Main {
         } else if (checkSeat(row, col)) {
             System.out.println("You can't book this seat, Try another one with has no 'X' ");
         } else {
-            System.out.println("Invalid Input, Try row within 0 to 4 and col within 0 to 5 ");
+            System.out.println("Invalid Input, Try row within 1 to 5 and col within 1 to 6 ");
         }
 
     }
 
-
     public boolean checkAvailability(int row, int col) {
-        if (seats[row][col] == 'X') return false;
 
-        return (seats[row][col] != 'X' && checkSeat(row, col));
+        return ( checkSeat(row, col) && seats[row][col] != 'X' );
     }
 
     public boolean checkSeat(int row, int col) {
 
-        if (row >= seats.length || col >= seats[0].length) return false;
-
-        return true;
+        return( row >= 0 && row < seats.length) && (col >= 0 && col < seats[0].length);
     }
 
     public void cancelBooking() {
-        System.out.println("Enter the number of seat: ");
+        System.out.print("Enter the number of seat: ");
         int cancledSeat = sc.nextInt();
 
         int row = cancledSeat / 10;
         int col = cancledSeat % 10;
 
-        boolean check = checkSeat(row, col);
+        boolean check = checkSeat(row-1, col-1);
 
-        boolean available = checkAvailability(row, col);
+        boolean available = checkAvailability(row-1, col-1);
 
         if (check && available) {
             System.out.println("This seat was not booked yet ");
         } else if (check) {
 
-            seats[row][col] = '0';
+            seats[row-1][col-1] = '0';
             System.out.println("Canceled done successfully ");
         } else {
-            System.out.println("Invalid Input, Try row within 0 to 4 and col within 0 to 5 ");
+            System.out.println("Invalid Input, Try row within 1 to 5 and col within 1 to 6 ");
 
         }
 
@@ -152,10 +145,26 @@ class Main {
     }
 
 
+    public boolean isExceeds80(){
+        int available = availableSeats();
+        int booked = bookedSeats();
+        int size = available + booked;
+        int exceed = (booked * 100 ) / size;
+
+        return exceed >= 80;
+    }
+
     public void main(String[] args) {
         intialSeats();
 
         while (true) {
+
+            if(isExceeds80()) {
+                System.out.println("---------------");
+                System.out.println("Almost Full");
+                System.out.println("---------------");
+
+            }
             int choice = menu();
 
             if (choice == 0) break;
@@ -175,6 +184,7 @@ class Main {
                 case -1 -> System.out.println("Invalid Input");
 
             }
+            System.out.println("-------------------");
 
 
         }
